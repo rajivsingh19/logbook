@@ -1,0 +1,850 @@
+<div id="sidebar">
+    <%-include('menu.ejs')%>
+    
+      </div>
+    <div id="Content">
+
+        <!DOCTYPE html>
+        <html>
+        
+        <head>
+            <title>BFPP</title>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Your custom styles here */
+        body {
+
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 0;
+            padding: 0px;
+            background-color: rgb(206, 200, 200);
+        }
+
+        #header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 120px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #header-container header h1,h3,h2 {
+            font-size: 35px;
+            font-weight: 600;
+            background-image: linear-gradient(to left, black, gray);
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            margin: 0;
+            padding: 0px;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            text-align: center;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+
+
+        th,
+        td {
+            border: 1px solid  #6c6363fe;
+            padding: 8px;
+            /* width: 100px; */
+        }
+
+        th {
+            background-color: #6c6363fe;
+            color: #fff;
+        }
+
+        #existingTableContainer th {
+            background-color: #6c6363fe;
+            color: #fff;
+
+        }
+
+        #TG-press,
+        #TG-ut {
+            background-color: #6c6363fe;
+            color: #fff;
+        }
+
+
+
+        .date {
+            height: 60px;
+            vertical-align: middle;
+        }
+
+        .vertical-text {
+            vertical-align: middle;
+            writing-mode: vertical-lr;
+            /* Rotate text vertically */
+            text-orientation: mixed;
+            /* Optional, helps with browser compatibility */
+            transform: rotate(-180deg);
+            /* Correct text orientation */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            padding: 0;
+            /* Remove padding to maximize space */
+        }
+
+
+        #TableContainer .observation-input {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height:100px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 14px;
+            resize: none;
+            
+        }
+
+        input[type="text"] {
+            align-items: center;
+            width: 60px;
+            padding: 6px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 0px;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+
+        input[type="date"],
+        select {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+       #data-table .row_3{
+            background-color: #f2f2f2;
+        }
+
+
+        .edit-symbol,
+        .save-button {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+
+        .edit-symbol {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .save-button {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .edit-symbol:hover,
+        .save-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+//...........for show alert message on duplacte data.......
+         <% if (duplicateMessage && duplicateMessage !== null) { %>
+            alert("<%= duplicateMessage %>");
+        <% } %>
+//.............for edit data in exiting table...............
+            function editData(id) {
+                const row = document.querySelector(`tr[data-id="${id}"]`);
+                row.classList.add('editing-row');
+
+
+                const cells = row.querySelectorAll('td:not(.edit-symbol):not(.save-button)');
+                cells.forEach((cell) => {
+                    cell.contentEditable = true;
+                });
+
+
+                row.querySelector('.edit-symbol').style.display = 'none';
+                row.querySelector('.save-button').style.display = '';
+            }
+
+//................for Save data after edit in exiting table.........
+        function saveData(id) {
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            row.classList.remove('editing-row');
+
+            const cells = row.querySelectorAll('td:not(.edit-symbol):not(.save-button)');
+            cells.forEach((cell) => {
+                cell.contentEditable = false;
+            });
+
+            row.querySelector('.edit-symbol').style.display = '';
+            row.querySelector('.save-button').style.display = 'none';
+
+            const date = row.cells[0].innerText;
+            const time = row.cells[1].innerText;
+            const No_of_charge = row.cells[2].innerText;
+            const comulative_charge = row.cells[3].innerText;
+            const radar_1 = row.cells[4].innerText;
+            const radar_2 = row.cells[5].innerText;
+            const SR_3 = row.cells[6].innerText;
+            const vol_x100 = row.cells[7].innerText;
+            const BP_press = row.cells[8].innerText;
+            const BP_temp = row.cells[9].innerText;
+            const BP_steam = row.cells[10].innerText;
+            const BP_OE = row.cells[11].innerText;
+            const BP_OF = row.cells[12].innerText;
+            const BP_PRT = row.cells[13].innerText;
+            const BP_PRK = row.cells[14].innerText;
+            const BP_MT = row.cells[15].innerText;
+            const BP_RAFFT = row.cells[16].innerText;
+            const BP_Tuyere = row.cells[17].innerText;
+            const TG_press = row.cells[18].innerText;
+            const UT_1 = row.cells[19].innerText;
+            const UT_2 = row.cells[20].innerText;
+            const UT_3 = row.cells[21].innerText;
+            const UT_4 = row.cells[22].innerText;
+            const IA = row.cells[23].innerText;
+            const OA = row.cells[24].innerText;
+            const DAA = row.cells[25].innerText;
+            const CG = row.cells[26].innerText;
+            const HS = row.cells[27].innerText;
+            const PRIMARY = row.cells[28].innerText;
+            const SECONDARY = row.cells[29].innerText;
+            const IG = row.cells[30].innerText;
+            const OG = row.cells[31].innerText;
+            const OG_STOVE = row.cells[32].innerText;
+            const OG_DOME = row.cells[33].innerText;
+            const OG_FLUE = row.cells[34].innerText;
+            const OG_Cobustion = row.cells[35].innerText;
+            const OG_BF = row.cells[36].innerText;
+            const OB_STOVE = row.cells[37].innerText;
+            const OB_DOME = row.cells[38].innerText;
+            const OB_FLUE = row.cells[39].innerText;
+
+            fetch('/update-bspl', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id,
+                    date,
+                    time,
+                    No_of_charge,
+                    comulative_charge,
+                    radar_1,
+                    radar_2,
+                    SR_3,
+                    vol_x100,
+                    BP_press,
+                    BP_temp,
+                    BP_steam,
+                    BP_OE,
+                    BP_OF,
+                    BP_PRT,
+                    BP_PRK,
+                    BP_MT,
+                    BP_RAFFT,
+                    BP_Tuyere,
+                    TG_press,
+                    UT_1,
+                    UT_2,
+                    UT_3,
+                    UT_4,
+                    IA,
+                    OA,
+                    DAA,
+                    CG,
+                    HS,
+                    PRIMARY,
+                    SECONDARY,
+                    IG,
+                    OG,
+                    OG_STOVE,
+                    OG_DOME,
+                    OG_FLUE,
+                    OG_Cobustion,
+                    OG_BF,
+                    OB_STOVE,
+                    OB_DOME,
+                    OB_FLUE,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Data updated:', data);
+                })
+                .catch((error) => {
+                    console.error('Error updating data:', error);
+                });
+        }
+
+//............For show existing table...............
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggleExistingTable');
+            const existingTableContainer = document.getElementById('existingTableContainer');
+            const existingHeader = document.getElementById('existingHeader'); // New line
+            const Filter = document.getElementById('Filter'); // New line
+
+            toggleButton.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent form submission
+
+                if (existingTableContainer.style.display === 'none') {
+                    existingTableContainer.style.display = 'block'; // Show the table
+                    existingHeader.style.display = 'block'; // Show the second heading
+                    Filter.style.display = 'block'; // Show the second heading
+                    toggleButton.textContent = 'Hide Data';
+                } else {
+                    existingHeader.style.display = 'none'; // Hide the second heading
+                    Filter.style.display = 'none'; // Hide the second heading
+                    toggleButton.textContent = 'Show Data';
+                    existingTableContainer.style.display = 'none'; // Hide the table
+                }
+            });
+
+            // Rest of your existing JavaScript code...
+        });
+
+
+    //function for add zero before dot .
+function addLeadingZero(input) {
+  const value = input.value;
+  
+  // Check if the value starts with a dot
+  if (value.startsWith('.')) {
+    input.value = '0' + value; // Add a leading zero
+  }
+}
+
+    </script>
+
+<!-- div of H1 -->
+    <div id="header-container">
+        <header>
+            <h1 class="text-center">BLAST FURNACE PROCESS PARAMETERS</h1>
+        </header>
+    </div>
+<!-- div of BLAST FURNACE PROCESS PARAMETERS -->
+    <div class="container-fluid mt-4">
+        <form action="/add-bspl" method="post">
+            <div class="table-responsive" id="data-table">
+                <table>
+                    <tr>
+                        <th class="vertical-text" rowspan="4">Date</th>
+                        <th class="vertical-text" rowspan="4">TIME</th>
+                        <th class="vertical-text" rowspan="4">NO. OF Charge/Hour</th>
+                        <th class="vertical-text" rowspan="4">Cumulative charge(no.)</th>
+                        <th class="vertical-text" rowspan="3" colspan="3">Stock level in (m)</th>
+                        <th colspan="16">FURNACE PARAMETERS</th>
+                        <th rowspan="2" colspan="9">GAS CLEANING PLANT</th>
+                        <th colspan="8">STOVES</th>
+                    </tr>
+                    <tr>
+                        <td name="BP" colspan="11">BLOWING PARAMETERS</td>
+                        <td name="TGP" colspan="5">TOP GAS PARAMETERS</td>
+                        <td name="ON_GAS" colspan="5">ON GAS</td>
+                        <td name="ON_BLAST" colspan="3">ON BLAST</td>
+
+                    </tr>
+                    <tr>
+                        <td class="vertical-text" name="vol.x100" rowspan="2">vol.x100(Nm&sup3/Min)</td>
+                        <td class="vertical-text" name="BP-press" rowspan="2">PRESSURE(Kg/Cm&sup2)</td>
+                        <td class="vertical-text" name="BP-temp" rowspan="2">TEMPERATURE(&deg;C)</td>
+                        <td class="vertical-text" name="BP-steam" rowspan="2">STEAM(t/hr.)</td>
+                        <td class="vertical-text" name="BP-OE" rowspan="2">OXYGEN ENRICHMENT(%)</td>
+                        <td class="vertical-text" name="BP-OF" rowspan="2">OXYGEN FLOW(Nm&sup3/Hr)</td>
+                        <td class="vertical-text" name="BP-PRT" rowspan="2">PCI RATE(ton/hr)</td>
+                        <td class="vertical-text" name="BP-PRK" rowspan="2">PCI RATE(Kg/thm)</td>
+                        <td class="vertical-text" name="BP-MT" rowspan="2">Moist.Total(gm/Nm&sup3)</td>
+                        <td class="vertical-text" name="BP-RAFFT" rowspan="2">RAFT(&deg;C)</td>
+                        <td class="vertical-text" name="BP-Tuyere" rowspan="2">Tuyere Velocity(m/s)</td>
+                        <td class="vertical-text" name="TG-press" id="TG-press" rowspan="2">PRESSURE(Kg/cm&sup2)</td>
+                        <td colspan="4" name="TG-ut" id="TG-ut">UPTAKE TEMPERATURE &deg;C</td>
+                        <td colspan="3" name="GCP-PRESS">PRESSURE</td>
+                        <td colspan="2" name="GCP-GAS">GAS FLOW</td>
+                        <td colspan="2" name="GCP-WATER">WATER FLOW</td>
+                        <td colspan="2" name="GCP-TEMP">TEMP.</td>
+                        <td class="vertical-text" name="OG-STOVE" rowspan="2">STOVE NO.</td>
+                        <td class="vertical-text" name="OG-DOME" rowspan="2">DOME TEMP.</td>
+                        <td class="vertical-text" name="OG-FLUE" rowspan="2">FLUE GAS TEMP. &deg;C</td>
+                        <td class="vertical-text" name="OG-COBUSTION" rowspan="2">Cobustion Air Flow</td>
+                        <td class="vertical-text" name="OG-BF" rowspan="2">BF Gas Flow(*100)(Nm&sup3/Hr)</td>
+                        <td class="vertical-text" name="OB-STOVE" rowspan="2">STOVE NO.</td>
+                        <td class="vertical-text" name="OB-DOME" rowspan="2">DOME TEMP.</td>
+                        <td class="vertical-text" name="OB-FLUE" rowspan="2">Flue Temp.</td>
+                    </tr>
+                    <tr>
+                        <td class="vertical-text" name="radar-1">RADAR-1</td>
+                        <td class="vertical-text" name="radar-2">RADAR-2</td>
+                        <td class="vertical-text" name="SR-3">SR-3</td>
+                        <td name="UT-1">1</td>
+                        <td name="UT-2">2</td>
+                        <td name="UT-3">3</td>
+                        <td name="UT-4">4</td>
+                        <td class="vertical-text" name="IA">INLET AGS</td>
+                        <td class="vertical-text" name="OA">OUTLET AGS</td>
+                        <td class="vertical-text" name="DAA">DP ACROSS AGE</td>
+                        <td class="vertical-text" name="CG">CLEAN GAS</td>
+                        <td class="vertical-text" name="HS">HB STOVE</td>
+                        <td class="vertical-text" name="PRIMARY">PRIMARY</td>
+                        <td class="vertical-text" name="SECONDARY">SECONDARY</td>
+                        <td class="vertical-text" name="IG">INLET GCP</td>
+                        <td class="vertical-text" name="OG">OUTLET GCP</td>
+                    </tr>
+
+                    <tr class="row_3">
+                        <td><input  type="date" name="date" required></td>
+                        <td name="time"> <select name="time" required>
+                                <option value="" disabled selected>Select Time</option>
+                                <option value="07:00">07:00</option>
+                                <option value="08:00">08:00</option>
+                                <option value="09:00">09:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="15:00">15:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="17:00">17:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="19:00">19:00</option>
+                                <option value="20:00">20:00</option>
+                                <option value="21:00">21:00</option>
+                                <option value="22:00">22:00</option>
+                                <option value="23:00">23:00</option>
+                                <option value="00:00">00:00</option>
+                                <option value="01:00">01:00</option>
+                                <option value="02:00">02:00</option>
+                                <option value="03:00">03:00</option>
+                                <option value="04:00">04:00</option>
+                                <option value="05:00">05:00</option>
+                                <option value="06:00">06:00</option>
+                            </select></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="No_of_charge" name="No_of_charge" ></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="comulative_charge" name="comulative_charge"></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="radar_1" name="radar_1"></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="radar_2" name="radar_2"></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="SR_3" name="SR_3"></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="vol_x100" name="vol_x100"></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="BP_press" name="BP_press"></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="BP_temp" name="BP_temp"></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="BP_steam" name="BP_steam"></td>
+                        <td><input  requried oninput="addLeadingZero(this)" type="text" id="BP_OE" name="BP_OE"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="BP_OF" name="BP_OF"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="BP_PRT" name="BP_PRT"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="BP_PRK" name="BP_PRK"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="BP_MT" name="BP_MT"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="BP_RAFFT" name="BP_RAFFT"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="BP_Tuyere" name="BP_Tuyere"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="TG_press" name="TG_press"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="UT_1" name="UT_1"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="UT_2" name="UT_2"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="UT_3" name="UT_3"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="UT_4" name="UT_4"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="IA" name="IA"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OA" name="OA"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="DAA" name="DAA"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="CG" name="CG"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="HS" name="HS"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="PRIMARY" name="PRIMARY"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="SECONDARY" name="SECONDARY"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="IG" name="IG"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OG" name="OG"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OG_STOVE" name="OG_STOVE"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OG_DOME" name="OG_DOME"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OG_FLUE" name="OG_FLUE"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OG_Cobustion" name="OG_Cobustion"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OG_BF" name="OG_BF"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OB_STOVE" name="OB_STOVE"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OB_DOME" name="OB_DOME"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="OB_FLUE" name="OB_FLUE"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary">Submit Data</button>
+                <button id="toggleExistingTable" class="btn btn-primary">Show Data</button>
+
+            </div>
+        </form>
+    </div>
+<!-- div of H2 existing table -->
+    <div class="container-fluid bg-light p-3" id="existingHeader" style="display: none;">
+        <header>
+            <h2 class="text-center">EXISTING BLAST FURNACE DATA</h2>
+        </header>
+    </div>
+    <div  id="Filter" style="display: none;">
+        <form action="/bfpp" method="get">
+            <label for="date">Select Date: </label>
+            <input type="date" id="date" name="date">
+            <button type="submit" class="btn btn-primary">Filter Data</button>
+          </form>
+    </div>
+
+
+    <!-- div of existing table of BLAST FURNACE PROCESS PARAMETERS  -->
+    <div class="text-center mt-4">
+        <form action="/edit-bspl" method="post">
+            <div class="table-responsive" id="existingTableContainer" style="display: none;">
+                <table>
+                    <tr>
+                        <th class="vertical-text" rowspan="4">Date</th>
+                        <th class="vertical-text" rowspan="4">TIME</th>
+                        <th class="vertical-text" rowspan="4">NO. OF Charge/Hour</th>
+                        <th class="vertical-text" rowspan="4">Cumulative charge(no.)</th>
+                        <th class="vertical-text" rowspan="3" colspan="3">Stock level in (m)</th>
+                        <th colspan="16">FURNACE PARAMETERS</th>
+                        <th rowspan="2" colspan="9">GAS CLEANING PLANT</th>
+                        <th colspan="8">STOVES</th>
+                        <th rowspan="4"><i class='fas fa-edit' style='font-size:36px;color: red'></i>E/S</th>
+
+                    </tr>
+                    <tr>
+                        <td name="BP" colspan="11">BLOWING PARAMETERS</td>
+                        <td name="TGP" colspan="5">TOP GAS PARAMETERS</td>
+                        <td name="ON_GAS" colspan="5">ON GAS</td>
+                        <td name="ON_BLAST" colspan="3">ON BLAST</td>
+
+                    </tr>
+                    <tr>
+                        <td class="vertical-text" name="vol.x100" rowspan="2">vol.x100(Nm&sup3/Min)</td>
+                        <td class="vertical-text" name="BP-press" rowspan="2">PRESSURE(Kg/Cm&sup2)</td>
+                        <td class="vertical-text" name="BP-temp" rowspan="2">TEMPERATURE(&deg;C)</td>
+                        <td class="vertical-text" name="BP-steam" rowspan="2">STEAM(t/hr.)</td>
+                        <td class="vertical-text" name="BP-OE" rowspan="2">OXYGEN ENRICHMENT(%)</td>
+                        <td class="vertical-text" name="BP-OF" rowspan="2">OXYGEN FLOW(Nm&sup3/Hr)</td>
+                        <td class="vertical-text" name="BP-PRT" rowspan="2">PCI RATE(ton/hr)</td>
+                        <td class="vertical-text" name="BP-PRK" rowspan="2">PCI RATE(Kg/thm)</td>
+                        <td class="vertical-text" name="BP-MT" rowspan="2">Moist.Total(gm/Nm&sup3)</td>
+                        <td class="vertical-text" name="BP-RAFFT" rowspan="2">RAFT(&deg;C)</td>
+                        <td class="vertical-text" name="BP-Tuyere" rowspan="2">Tuyere Velocity(m/s)</td>
+                        <td class="vertical-text" name="TG-press" id="TG-press" rowspan="2">PRESSURE(Kg/cm&sup2)</td>
+                        <td colspan="4" name="TG-ut" id="TG-ut">UPTAKE TEMPERATURE &deg;C</td>
+                        <td colspan="3" name="GCP-PRESS">PRESSURE</td>
+                        <td colspan="2" name="GCP-GAS">GAS FLOW</td>
+                        <td colspan="2" name="GCP-WATER">WATER FLOW</td>
+                        <td colspan="2" name="GCP-TEMP">TEMP.</td>
+                        <td class="vertical-text" name="OG-STOVE" rowspan="2">STOVE NO.</td>
+                        <td class="vertical-text" name="OG-DOME" rowspan="2">DOME TEMP.</td>
+                        <td class="vertical-text" name="OG-FLUE" rowspan="2">FLUE GAS TEMP. &deg;C</td>
+                        <td class="vertical-text" name="OG-COBUSTION" rowspan="2">Cobustion Air Flow</td>
+                        <td class="vertical-text" name="OG-BF" rowspan="2">BF Gas Flow(*100)(Nm&sup3/Hr)</td>
+                        <td class="vertical-text" name="OB-STOVE" rowspan="2">STOVE NO.</td>
+                        <td class="vertical-text" name="OB-DOME" rowspan="2">DOME TEMP.</td>
+                        <td class="vertical-text" name="OB-FLUE" rowspan="2">Flue Temp.</td>
+                    </tr>
+                    <tr>
+                        <td class="vertical-text" name="radar-1">RADAR-1</td>
+                        <td class="vertical-text" name="radar-2">RADAR-2</td>
+                        <td class="vertical-text" name="SR-3">SR-3</td>
+                        <td name="UT-1">1</td>
+                        <td name="UT-2">2</td>
+                        <td name="UT-3">3</td>
+                        <td name="UT-4">4</td>
+                        <td class="vertical-text" name="IA">INLET AGS</td>
+                        <td class="vertical-text" name="OA">OUTLET AGS</td>
+                        <td class="vertical-text" name="DAA">DP ACROSS AGE</td>
+                        <td class="vertical-text" name="CG">CLEAN GAS</td>
+                        <td class="vertical-text" name="HS">HB STOVE</td>
+                        <td class="vertical-text" name="PRIMARY">PRIMARY</td>
+                        <td class="vertical-text" name="SECONDARY">SECONDARY</td>
+                        <td class="vertical-text" name="IG">INLET GCP</td>
+                        <td class="vertical-text" name="OG">OUTLET GCP</td>
+                    </tr>
+                    <% tableName.slice(-24).forEach(date=> { %>
+
+
+                        <tr data-id="<%= date.id %>">
+                            <td class="existing_date">
+                                <%= date.date %>
+                            </td>
+                            <td class="existing_time">
+                                <%= date.time %>
+                            </td>
+                            <td>
+                                <%= date.No_of_charge %>
+                            </td>
+                            <td>
+                                <%= date.comulative_charge %>
+                            </td>
+                            <td>
+                                <%= date.radar_1 %>
+                            </td>
+                            <td>
+                                <%= date.radar_2 %>
+                            </td>
+                            <td>
+                                <%= date.SR_3 %>
+                            </td>
+                            <td>
+                                <%= date.vol_x100 %>
+                            </td>
+                            <td>
+                                <%= date.BP_press %>
+                            </td>
+                            <td>
+                                <%= date.BP_temp %>
+                            </td>
+                            <td>
+                                <%= date.BP_steam %>
+                            </td>
+                            <td>
+                                <%= date.BP_OE %>
+                            </td>
+                            <td>
+                                <%= date.BP_OF %>
+                            </td>
+                            <td>
+                                <%= date.BP_PRT %>
+                            </td>
+                            <td>
+                                <%= date.BP_PRK %>
+                            </td>
+                            <td>
+                                <%= date.BP_MT %>
+                            </td>
+                            <td>
+                                <%= date.BP_RAFFT %>
+                            </td>
+                            <td>
+                                <%= date.BP_Tuyere %>
+                            </td>
+                            <td>
+                                <%= date.TG_press %>
+                            </td>
+                            <td>
+                                <%= date.UT_1 %>
+                            </td>
+                            <td>
+                                <%= date.UT_2 %>
+                            </td>
+                            <td>
+                                <%= date.UT_3 %>
+                            </td>
+                            <td>
+                                <%= date.UT_4 %>
+                            </td>
+                            <td>
+                                <%= date.IA %>
+                            </td>
+                            <td>
+                                <%= date.OA %>
+                            </td>
+                            <td>
+                                <%= date.DAA %>
+                            </td>
+                            <td>
+                                <%= date.CG %>
+                            </td>
+                            <td>
+                                <%= date.HS %>
+                            </td>
+                            <td>
+                                <%= date.PRIMARY %>
+                            </td>
+                            <td>
+                                <%= date.SECONDARY %>
+                            </td>
+                            <td>
+                                <%= date.IG %>
+                            </td>
+                            <td>
+                                <%= date.OG %>
+                            </td>
+                            <td>
+                                <%= date.OG_STOVE %>
+                            </td>
+                            <td>
+                                <%= date.OG_DOME %>
+                            </td>
+                            <td>
+                                <%= date.OG_FLUE %>
+                            </td>
+                            <td>
+                                <%= date.OG_Cobustion %>
+                            </td>
+                            <td>
+                                <%= date.OG_BF %>
+                            </td>
+                            <td>
+                                <%= date.OB_STOVE %>
+                            </td>
+                            <td>
+                                <%= date.OB_DOME %>
+                            </td>
+                            <td>
+                                <%= date.OB_FLUE %>
+                            </td>
+                            <td class="edit-symbol" onclick="editData('<%= date.id %>')">
+                                &#9998;
+                            </td>
+                            <td class="save-button" onclick="saveData('<%= date.id %>')" style="display: none;">
+                                &#10004;
+                            </td>
+                        </tr>
+                        <% }); %>
+
+
+                </table>
+            </div>
+        </form>
+
+
+    </div>
+
+ <!-- div of H3 -->
+    <div class="container-fluid bg-light p-3" id="header-container">
+        <header>
+            <h3 class="text-center">TUYERE OBSERVATION DETAILS</h3>
+        </header>
+    </div>
+
+<!-- div of TUYERE OBSERVATION DETAILS table -->
+    <div class="text-center mt-4">
+        <form action="/tuyere-bspl" method="post">
+            <div class="table-responsive" id="TableContainer">
+                <table>
+                    
+                    <tr>
+                        <th>Shift</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                        <th>9</th>
+                        <th>10</th>
+                        <th>11</th>
+                        <th>12</th>
+                        <th>13</th>
+                        <th>14</th>
+                        <th>15</th>
+                        <th>16</th>
+                        <th>17</th>
+                        <th>18</th>
+                        <th>19</th>
+                        <th>20</th>
+                        <th>21</th>
+                        <th>22</th>
+                        <th>23</th>
+                        <th>24</th>
+                        <th>25</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="shift" id="shift">
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_1" name="shift_1"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_2" name="shift_2"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_3" name="shift_3"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_4" name="shift_4"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_5" name="shift_5"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_6" name="shift_6"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_7" name="shift_7"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_8" name="shift_8"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_9" name="shift_9"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_10" name="shift_10"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_11" name="shift_11"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_12" name="shift_12"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_13" name="shift_13"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_14" name="shift_14"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_15" name="shift_15"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_16" name="shift_16"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_17" name="shift_17"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_18" name="shift_18"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_19" name="shift_19"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_20" name="shift_20"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_21" name="shift_21"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_22" name="shift_22"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_23" name="shift_23"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_24" name="shift_24"></td>
+                        <td><input requried oninput="addLeadingZero(this)" type="text" id="shift_25" name="shift_25"></td>
+                        
+
+                    </tr>
+                    <tr>
+                        <td colspan="9">Observation</td>
+                        <td colspan="9">Observation</td>
+                        <td colspan="8">Observation</td>
+                    </tr>
+                    <tr>
+                        <td colspan="9"><textarea id="Observation_1" name="Observation_1" class="observation-input"></textarea></td>
+                        <td colspan="9"><textarea id="Observation_2" name="Observation_2" class="observation-input"></textarea></td>
+                        <td colspan="8"><textarea id="Observation_3" name="Observation_3" class="observation-input"></textarea></td>
+                    </tr>
+                    
+
+                </table>
+                
+            </div>
+            <div class="text-center mt-3">
+                <tr>
+                    <th>Date</th>
+                </tr>
+                <tr>
+                    <td><input required type="date" name="date_2" id="date_2"required></td>
+                </tr>
+                <button type="submit" class="btn btn-primary">Submit Details</button>
+            </div>
+            
+        </form>
+
+
+    </div>
+    <a href="/bfpp-excel" >Export to Excel</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/path/to/index.js"></script>
+</body>
+</html>

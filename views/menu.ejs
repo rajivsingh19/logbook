@@ -1,0 +1,121 @@
+<link rel="stylesheet" type="text/css" href="public/css/styles.css" />
+<meta charset="utf-8">
+  <title>User and Role Management</title>
+  <style>
+    /* Add your CSS styles here */
+       /* CSS Reset */
+       * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* Sidebar Styles */
+    #sidebar {
+      z-index: 1000; 
+      width: 250px;
+      background-color: #34495e; 
+      height: 100vh;
+      position: fixed;
+      left: -245px;
+      top: 0;
+      padding-top: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      transition: left 0.01s ease; 
+    }
+
+
+    #container {
+  /* ... other styles ... */
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+
+    #content {
+      margin-left: 260px; 
+      padding: 20px;
+    }
+
+
+
+
+    #sidebar:hover {
+      left: 0;
+    }
+
+    #content {
+      margin-left: 20px;
+      padding: 20px;
+    }
+
+    #sidebar:hover {
+      left: 0; /* Show the sidebar on hover */
+    }
+
+    #sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #sidebar li {
+      margin-bottom: 10px;
+    }
+
+    #sidebar li a {
+      display: block;
+      text-decoration: none;
+      color: #e3dada;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 5px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    #sidebar li a:hover {
+      background-color: #f9f9f9;
+      color: #555;
+    }
+
+    #sidebar h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #e3dada;
+      font-size: 1.5em;
+    }
+
+    /* Improve button style */
+    button {
+      display: inline-block;
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    } </style>
+    <div id="container">
+      <div id="sidebar">
+        <h2>Menu</h2>
+        <ul>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/users">Users</a></li>
+          <li><a href="/obpt">OBP Temperature</a></li>
+          <li><a href="/bfpp">BLAST FURNACE</a></li>
+          <li><a href="/gcp_wtp">GCP & WTP</a></li>
+          <li><a href="/HOT_METAL_SLAG">HOT METAL SLAG</a></li>
+          <li><a href="/roles">Roles</a></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+      </div>
+    </div>

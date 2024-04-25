@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>User and Role Management</title>
+  <style>
+    /* Add your CSS styles here */
+    #sidebar {
+      width: 200px;
+      background-color: #f1f1f1;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 20px;
+    }
+
+    #content {
+      margin-left: 220px;
+      padding: 20px;
+    }
+
+    #sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #sidebar li {
+      margin-bottom: 10px;
+    }
+
+    #sidebar li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    #sidebar li a:hover {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+  <%-include('menu.ejs')%>
+  </div>
+  
+  <div id="content">
+    <h1>Welcome to Manufacturing eLog Book</h1>
+  </div>
+</body>
+</html>

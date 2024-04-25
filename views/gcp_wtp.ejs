@@ -1,0 +1,676 @@
+<div id="sidebar">
+    <%-include('menu.ejs')%>
+    
+      </div>
+    <div id="Content">
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>BPSL</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            margin: 0;
+            padding: 0px;
+             background-color:rgb(206, 200, 200); 
+        }
+        table {
+            text-align: center;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        input[type="text"] {
+            align-items: center;
+            width: 60px;
+            padding: 6px;
+            box-sizing: border-box;
+            border: 1px solid black;
+            border-radius: 0px;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        th,
+        td {
+            border: 1px solid gray;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #6c6363fe;
+            color: #fff;
+        }
+
+ 
+         
+        .vertical-text {
+            vertical-align: middle;
+            writing-mode: vertical-lr;
+            /* Rotate text vertically */
+            text-orientation: mixed;
+            /* Optional, helps with browser compatibility */
+            transform: rotate(-180deg);
+            /* Correct text orientation */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            padding: 0;
+            /* Remove padding to maximize space */
+        }
+        #header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 120px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #header-container header h1{
+            font-size: 35px;
+            font-weight: 600;
+            background-image: linear-gradient(to left, black, gray);
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            margin: 0;
+            padding: 0px;
+            text-align: center;
+        }
+        
+        .edit-symbol,
+        .save-button {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+
+        .edit-symbol {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .save-button {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .edit-symbol:hover,
+        .save-button:hover {
+            background-color: #0056b3;
+        }
+
+        #TableContainer .remark-input {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height:100px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 14px;
+            resize: none;
+            
+        }
+
+    </style> 
+
+</head>
+
+<body>
+    <script>
+        //...........for show alert message on duplacte data.......
+                 <% if (duplicateMessage && duplicateMessage !== null) { %>
+                    alert("<%= duplicateMessage %>");
+                <% } %>
+
+
+//.............for edit data in exiting table...............
+function editData(id) {
+                const row = document.querySelector(`tr[data-id="${id}"]`);
+                row.classList.add('editing-row');
+
+
+                const cells = row.querySelectorAll('td:not(.edit-symbol):not(.save-button)');
+                cells.forEach((cell) => {
+                    cell.contentEditable = true;
+                });
+
+
+                row.querySelector('.edit-symbol').style.display = 'none';
+                row.querySelector('.save-button').style.display = '';
+            }
+
+//................for Save data after edit in exiting table.........
+function saveData(id) {
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            row.classList.remove('editing-row');
+
+            const cells = row.querySelectorAll('td:not(.edit-symbol):not(.save-button)');
+            cells.forEach((cell) => {
+                cell.contentEditable = false;
+            });
+
+            row.querySelector('.edit-symbol').style.display = '';
+            row.querySelector('.save-button').style.display = 'none';
+
+            const date = row.cells[0].innerText;
+            const time = row.cells[1].innerText;
+            const tk_30_lit_8805 = row.cells[2].innerText;
+            const main_pump_running = row.cells[3].innerText;
+            const gcp_spray_water_1 = row.cells[4].innerText;
+            const gcp_spray_water_2 = row.cells[5].innerText;
+            const gcp_spray_water_3 = row.cells[6].innerText;
+            const gcp_spray_water_4 = row.cells[7].innerText;
+            const cp_30_outlet_temp = row.cells[8].innerText;
+            const flow_regulating_valve_position = row.cells[9].innerText;
+            const prescrubber_level = row.cells[10].innerText;
+            const demister_level = row.cells[11].innerText;
+            const recirculation_pump_1 = row.cells[12].innerText;
+            const recirculation_pump_2 = row.cells[13].innerText;
+            const recirculation_pump_3 = row.cells[14].innerText;
+            const recirculation_pump_4 = row.cells[15].innerText;
+            const scrubber_a = row.cells[16].innerText;
+            const scrubber_b = row.cells[17].innerText;
+            const scrubber_c = row.cells[18].innerText;
+            const scrubber_d = row.cells[19].innerText;
+            const uptake_pressure = row.cells[20].innerText;
+            const ag_element_position = row.cells[21].innerText;
+            const gcp_hydraulic_1 = row.cells[22].innerText;
+            const gcp_hydraulic_2 = row.cells[23].innerText;
+            const gcp_hydraulic_3 = row.cells[24].innerText;
+            const greasing_pump_1 = row.cells[25].innerText;
+            const network_set_point = row.cells[26].innerText;
+            const flaire_stack_valve = row.cells[27].innerText;
+            const lpg_ftc_9045 = row.cells[28].innerText;
+            const thickner = row.cells[29].innerText;
+            const cooling_tower_fan_a = row.cells[30].innerText;
+            const cooling_tower_fan_b = row.cells[31].innerText;
+            const bedmass = row.cells[32].innerText;
+            const thickner_torque = row.cells[33].innerText;
+            const sludge_tank_level = row.cells[34].innerText;
+            const dosing_pump = row.cells[35].innerText;
+
+            fetch('/update-GAW', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id,
+                    date,
+                    time,
+                    tk_30_lit_8805,
+                 main_pump_running,
+        gcp_spray_water_1,
+        gcp_spray_water_2,
+        gcp_spray_water_3,
+        gcp_spray_water_4,
+        cp_30_outlet_temp,
+        flow_regulating_valve_position,
+        prescrubber_level,
+        demister_level,
+        recirculation_pump_1,
+        recirculation_pump_2,
+        recirculation_pump_3,
+        recirculation_pump_4,
+        scrubber_a,
+        scrubber_b,
+        scrubber_c,
+        scrubber_d,
+        uptake_pressure,
+        ag_element_position,
+        gcp_hydraulic_1,
+        gcp_hydraulic_2,
+        gcp_hydraulic_3,
+        greasing_pump_1,
+        network_set_point,
+        flaire_stack_valve,
+        lpg_ftc_9045,
+        thickner,
+        cooling_tower_fan_a,
+        cooling_tower_fan_b,
+        bedmass,
+        thickner_torque,
+        sludge_tank_level,
+        dosing_pump,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Data updated:', data);
+                })
+                .catch((error) => {
+                    console.error('Error updating data:', error);
+                });
+        }
+
+//............For show existing table...............
+document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggleExistingTable');
+            const existingTableContainer = document.getElementById('existingTableContainer');
+            const existingHeader = document.getElementById('existingHeader'); // New line
+            const Filter = document.getElementById('Filter'); // New line
+
+            toggleButton.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent form submission
+
+                if (existingTableContainer.style.display === 'none') {
+                    existingTableContainer.style.display = 'block'; // Show the table
+                    existingHeader.style.display = 'block'; // Show the second heading
+                    Filter.style.display = 'block'; // Show the second heading
+                    toggleButton.textContent = 'Hide Data';
+                } else {
+                    existingHeader.style.display = 'none'; // Hide the second heading
+                    Filter.style.display = 'none'; // Hide the second heading
+                    toggleButton.textContent = 'Show Data';
+                    existingTableContainer.style.display = 'none'; // Hide the table
+                }
+            });
+
+            
+        });
+
+        //function for add zero before dot .
+function addLeadingZero(input) {
+  const value = input.value;
+  
+  // Check if the value starts with a dot
+  if (value.startsWith('.')) {
+    input.value = '0' + value; // Add a leading zero
+  }
+}
+
+    </script>
+
+    <div  id="header-container">
+        <header>
+            <h1 class="text-center">GCP AND WTP(BLAST FURNACE #2)</h1>
+        </header>
+    </div>
+
+    
+    <div class="container-fluid mt-4">
+        <form action="/add-GAW" method="post">
+             <div class="table-responsive" id="data-table">
+                <table >
+                    <tr>
+                        <th class="vertical-text" rowspan="2">Date</th>
+                        <th class="vertical-text" rowspan="2">TIME</th>
+                        <th class="vertical-text" rowspan="2">TK-30(LIT-8805)%</th>
+                        <th class="vertical-text" rowspan="2">MAIN PUMP RUNNING CP-30 A/B</th>
+                        <th colspan="4"> GCP SPRAY WATER</th>
+                        <th class="vertical-text" rowspan="2">CP-30 OUTLET TEMP.(TIT-8002)&deg;C</th>
+                        <th class="vertical-text" rowspan="2">FLOW REGULATING VALVE POSITION %</th>
+                        <th class="vertical-text" rowspan="2"> PRESCRUBBER LEVEL (LIT-8020)%</th>
+                        <th class="vertical-text" rowspan="2">DEMISTER LEVEL(LIT8010)%</th>
+                        <th colspan="4">RECIRCULATION PUMP</th>
+                        <th colspan="4">SCRUBBER</th>
+                        <th class="vertical-text" rowspan="2">UPTAKE PRESSURE</th>
+                        <th class="vertical-text" rowspan="2">AG ELEMENT POSITION(ZT-8033)%</th>
+                        <th colspan="3">GCP HYDRAULIC</th>
+                        <th class="vertical-text" rowspan="2">GREASING PUMP 1/2</th>
+                        <th class="vertical-text" rowspan="2">NETWORK SET POINT (PIC_8104) MMWC</th>
+                        <th class="vertical-text" rowspan="2">FLAIRE STACK VALVE(PV-8104_1/_2)</th>
+                        <th class="vertical-text" rowspan="2">LPG FTC 9045</th>
+                        <th class="vertical-text" rowspan="2">THICKNER(1/2)</th>
+                        <th colspan="2">COOLING TOWER FAN</th>
+                        <th class="vertical-text" rowspan="2">BEDMASS (PIT-8890/8891)Kpa.</th>
+                        <th class="vertical-text" rowspan="2">THICKNER TORQUE N.M.</th>
+                        <th class="vertical-text" rowspan="2">SLUDGE TANK LEVEL (LIT-8820)%</th>
+                        <th class="vertical-text" rowspan="2">DOSING PUMP(DU-32.1/2/3)</th>
+                    </tr>
+                    <tr>
+                        <td class="vertical-text">FLOW (FIT-8817)M&sup3</td>
+                        <td class="vertical-text">FLOW (FIT-8003_1)M&sup3</td>
+                        <td class="vertical-text">FLOW (FIT-8003_2)M&sup3</td>
+                        <td class="vertical-text">PRESSURE (PIT-8814)Bar</td>
+                        <td class="vertical-text">MP8010_1/2</td>
+                        <td class="vertical-text">FLOW FIT-8018 M&sup3</td>
+                        <td class="vertical-text">PRESS. (PIT-8019) Bar.</td>
+                        <td class="vertical-text">TEMP. (TE-8019)&deg;C</td>
+                        <td class="vertical-text">INLET TEMP. (TE-8030)&deg;C</td>
+                        <td class="vertical-text">OUTLET TEMP. (TE-8037)&deg;C</td>
+                        <td class="vertical-text">INLET PRESS. (PIT-8031) Bar.</td>
+                        <td class="vertical-text">OUTLET PRESS.(PIT-8036)MMWC</td>
+                        <td class="vertical-text">TANK LEVEL (LIT-8040) %</td>
+                        <td class="vertical-text">PRESS. (PIT-8054) Bar.</td>
+                        <td class="vertical-text">OIL TEMP.(TIT-8042)&deg;C</td>
+                        <td colspan="2">A,B,C</td>
+                    </tr>
+                    <tr>
+                        <td><input  type="date" name="date" required></td>
+                        <td name="time"> <select name="time" required>
+                                <option value="null">Select Time</option>
+                                <option value="06:00">06:00</option>
+                                <option value="08:00">08:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="20:00">20:00</option>
+                                <option value="22:00">22:00</option>
+                                <option value="00:00">00:00</option>
+                                <option value="02:00">02:00</option>
+                                <option value="04:00">04:00</option>
+                            </select></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="tk_30_lit_8805" id="tk_30_lit_8805"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="main_pump_running" id="main_pump_running"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="gcp_spray_water_1" id="gcp_spray_water_1"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="gcp_spray_water_2" id="gcp_spray_water_2"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="gcp_spray_water_3" id="gcp_spray_water_3"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="gcp_spray_water_4" id="gcp_spray_water_4"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="cp_30_outlet_temp" id="cp_30_outlet_temp"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="flow_regulating_valve_position" id="flow_regulating_valve_position"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="prescrubber_level" id="prescrubber_level"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="demister_level" id="demister_level"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="recirculation_pump_1" id="recirculation_pump_1"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="recirculation_pump_2" id="recirculation_pump_2"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="recirculation_pump_3" id="recirculation_pump_3"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="recirculation_pump_4" id="recirculation_pump_4"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="scrubber_a" id="scrubber_a"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="scrubber_b" id="scrubber_b"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="scrubber_c" id="scrubber_c"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="scrubber_d" id="scrubber_d"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="uptake_pressure" id="uptake_pressure"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="ag_element_position" id="ag_element_position"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="gcp_hydraulic_1" id="gcp_hydraulic_1"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="gcp_hydraulic_2" id="gcp_hydraulic_2"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="gcp_hydraulic_3" id="gcp_hydraulic_3"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="greasing_pump_1" id="greasing_pump_1"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="network_set_point" id="network_set_point"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="flaire_stack_valve" id="flaire_stack_valve"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="lpg_ftc_9045" id="lpg_ftc_9045"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="thickner" id="thickner"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="cooling_tower_fan_a" id="cooling_tower_fan_a"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="cooling_tower_fan_b" id="cooling_tower_fan_b"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="bedmass" id="bedmass"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="thickner_torque" id="thickner_torque"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="sludge_tank_level" id="sludge_tank_level"></td>
+                            <td><input requried oninput="addLeadingZero(this)" type="text" name="dosing_pump" id="dosing_pump"></td>
+                        
+                    </tr>
+                </table>
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary">Submit Data</button>
+                <button id="toggleExistingTable" class="btn btn-primary">Show Data</button>
+
+            </div>
+            </form>
+    </div>
+
+<!-- div of H2 existing table -->
+<div class="container-fluid bg-light p-3" id="existingHeader" style="display: none;" >
+    <header>
+        <h2 class="text-center">EXISTING GCP & WTP DATA</h2>
+    </header>
+</div>
+<div  id="Filter" style="display: none;">
+    <form action="/gcp_wtp" method="get">
+        <label for="date">Select Date: </label>
+        <input type="date" id="date" name="date">
+        <button type="submit" class="btn btn-primary">Filter Data</button>
+      </form>
+</div>
+<div class="container-fluid mt-4">
+    <form action="/edit-bspl" method="post">
+         <div class="table-responsive" id="existingTableContainer" style="display: none;">
+            <table >
+                <tr>
+                    <th class="vertical-text" rowspan="2">Date</th>
+                    <th class="vertical-text" rowspan="2">TIME</th>
+                    <th class="vertical-text" rowspan="2">TK-30(LIT-8805)%</th>
+                    <th class="vertical-text" rowspan="2">MAIN PUMP RUNNING CP-30 A/B</th>
+                    <th colspan="4"> GCP SPRAY WATER</th>
+                    <th class="vertical-text" rowspan="2">CP-30 OUTLET TEMP.(TIT-8002)&deg;C</th>
+                    <th class="vertical-text" rowspan="2">FLOW REGULATING VALVE POSITION %</th>
+                    <th class="vertical-text" rowspan="2"> PRESCRUBBER LEVEL (LIT-8020)Bar</th>
+                    <th class="vertical-text" rowspan="2">DEMISTER LEVEL(LIT8010)%</th>
+                    <th colspan="4">RECIRCULATION PUMP</th>
+                    <th colspan="4">SCRUBBER</th>
+                    <th class="vertical-text" rowspan="2">UPTAKE PRESSURE</th>
+                    <th class="vertical-text" rowspan="2">AG ELEMENT POSITION(ZT-8033)%</th>
+                    <th colspan="3">GCP HYDRAULIC</th>
+                    <th class="vertical-text" rowspan="2">GREASING PUMP 1/2</th>
+                    <th class="vertical-text" rowspan="2">NETWORK SET POINT (PIC_8104) MMWC</th>
+                    <th class="vertical-text" rowspan="2">FLAIRE STACK VALVE(PV-8104_1/_2)</th>
+                    <th class="vertical-text" rowspan="2">LPG FTC 9045</th>
+                    <th class="vertical-text" rowspan="2">THICKNER(1/2)</th>
+                    <th colspan="2">COOLING TOWER FAN</th>
+                    <th class="vertical-text" rowspan="2">BEDMASS (PIT-8890/8891)Kpa.</th>
+                    <th class="vertical-text" rowspan="2">THICKNER TORQUE N.M.</th>
+                    <th class="vertical-text" rowspan="2">SLAUDGE TANK LEVEL (LIT-8820)%</th>
+                    <th class="vertical-text" rowspan="2">DOSING PUMP(DU-32.1/2/3)</th>
+                    <th rowspan="2"><i class='fas fa-edit' style='font-size:36px;color: red'></i>E/S</th>
+                </tr>
+                <tr>
+                    <td class="vertical-text">FLOW (FIT-8817)M&sup3</td>
+                    <td class="vertical-text">FLOW (FIT-8003_1)M&sup3</td>
+                    <td class="vertical-text">FLOW (FIT-8003_2)M&sup3</td>
+                    <td class="vertical-text">PRESSURE (PIT-8814)Bar</td>
+                    <td class="vertical-text">MP8010_1/2</td>
+                    <td class="vertical-text">FLOW FIT-8018 M&sup3</td>
+                    <td class="vertical-text">PRESS. (PIT-8019) Bar.</td>
+                    <td class="vertical-text">TEMP. (TE-8019)&deg;C</td>
+                    <td class="vertical-text">INLET TEMP. (TE-8030)&deg;C</td>
+                    <td class="vertical-text">OUTLET TEMP. (TE-8037)&deg;C</td>
+                    <td class="vertical-text">INLET PRESS. (PIT-8031) Bar.</td>
+                    <td class="vertical-text">OUTLET PRESS.(PIT-8036)MMWC</td>
+                    <td class="vertical-text">TANK LEVEL (LIT-8040) %</td>
+                    <td class="vertical-text">PRESS. (PIT-8054) Bar.</td>
+                    <td class="vertical-text">OIL TEMP.(TIT-8042)&deg;C</td>
+                    <td colspan="2">A,B,C</td>
+                </tr>
+                <% tableName.slice(-24).forEach(date => { %>
+                    <tr data-id="<%= date.id %>">
+                        <td class="existing_date">
+                            <%= date.date %>
+                        </td>
+                        <td class="existing_time">
+                            <%= date.time %>
+                        </td>
+                        <td>
+                            <%= date.tk_30_lit_8805 %>
+                        </td>
+                        <td>
+                            <%= date.main_pump_running %>
+                        </td>
+                        <td>
+                            <%= date.gcp_spray_water_1 %>
+                        </td>
+                        <td>
+                            <%= date.gcp_spray_water_2 %>
+                        </td>
+                        <td>
+                            <%= date.gcp_spray_water_3 %>
+                        </td>
+                        <td>
+                            <%= date.gcp_spray_water_4 %>
+                        </td>
+                        <td>
+                            <%= date.cp_30_outlet_temp %>
+                        </td>
+                        <td>
+                            <%= date.flow_regulating_valve_position %>
+                        </td>
+                        <td>
+                            <%= date.prescrubber_level %>
+                        </td>
+                        <td>
+                            <%= date.demister_level %>
+                        </td>
+                        <td>
+                            <%= date.recirculation_pump_1 %>
+                        </td>
+                        <td>
+                            <%= date.recirculation_pump_2 %>
+                        </td>
+                        <td>
+                            <%= date.recirculation_pump_3 %>
+                        </td>
+                        <td>
+                            <%= date.recirculation_pump_4 %>
+                        </td>
+                        <td>
+                            <%= date.scrubber_a %>
+                        </td>
+                        <td>
+                            <%= date.scrubber_b %>
+                        </td>
+                        <td>
+                            <%= date.scrubber_c %>
+                        </td>
+                        <td>
+                            <%= date.scrubber_d %>
+                        </td>
+                        <td>
+                            <%= date.uptake_pressure %>
+                        </td>
+                        <td>
+                            <%= date.ag_element_position %>
+                        </td>
+                        <td>
+                            <%= date.gcp_hydraulic_1 %>
+                        </td>
+                        <td>
+                            <%= date.gcp_hydraulic_2 %>
+                        </td>
+                        <td>
+                            <%= date.gcp_hydraulic_3 %>
+                        </td>
+                        <td>
+                            <%= date.greasing_pump_1 %>
+                        </td>
+                        <td>
+                            <%= date.network_set_point %>
+                        </td>
+                        <td>
+                            <%= date.flaire_stack_valve %>
+                        </td>
+                        <td>
+                            <%= date.lpg_ftc_9045 %>
+                        </td>
+                        <td>
+                            <%= date.thickner %>
+                        </td>
+                        <td>
+                            <%= date.cooling_tower_fan_a %>
+                        </td>
+                        <td>
+                            <%= date.cooling_tower_fan_b %>
+                        </td>
+                        <td>
+                            <%= date.bedmass %>
+                        </td>
+                        <td>
+                            <%= date.thickner_torque %>
+                        </td>
+                        <td>
+                            <%= date.sludge_tank_level %>
+                        </td>
+                        <td>
+                            <%= date.dosing_pump %>
+                        </td>
+                        <td class="edit-symbol" onclick="editData('<%= date.id %>')">
+                            &#9998;
+                        </td>
+                        <td class="save-button" onclick="saveData('<%= date.id %>')" style="display: none;">
+                            &#10004;
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        </form>
+</div> 
+
+
+
+
+
+<!-- div of remark and shift DETAILS table -->
+<div class="text-center mt-4">
+    <form action="/remark-shift" method="post">
+        <div class="table-responsive" id="TableContainer">
+            <table>
+                
+                <tr>
+                    <th colspan="5">Remark</th>
+                    <th colspan="5">Remark</th>
+                    <th colspan="5">Remark</th>
+                    <th>Shift</th>
+                    <th>DUST</th>
+                    <th>FILTER PRESS CAKE</th>
+                    <th>BF GAS THEO.</th>
+                    <th>BF GAS HOT STOVE</th>
+                    <th>BF GAS FLAIR STACK</th>
+                    <th>BF GAS NETWORK</th>
+                    <th>LPG CONSUMPTION</th>
+                    <th> WATER CONSUMPTION </th>
+                    
+                </tr>
+                <tr>
+                    <td colspan="5" rowspan="2"><textarea  id="remark_1" name="remark_1" class="remark-input"></textarea></td>
+                        <td colspan="5" rowspan="2"><textarea id="remark_2" name="remark_2" class="remark-input"></textarea></td>
+                        <td colspan="5" rowspan="2"><textarea id="remark_3" name="remark_3" class="remark-input"></textarea></td>
+                   
+                    <td>
+                        <select name="shift" id="shift">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </td>
+                   
+                   
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    
+                    
+                </tr>
+                <tr>
+                     <td>Total</td>
+                     <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                    <td><input requried oninput="addLeadingZero(this)" type="text" id="" name=""></td>
+                </tr>
+               
+                
+
+            </table>
+            
+            <div class="text-center mt-3">
+                <tr>
+                    <th>Date</th>
+                </tr>
+                <tr>
+                    <td><input type="date" name="date_2" id="date_2"required></td>
+                </tr>
+                <button type="submit" class="btn btn-primary">Submit Details</button>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+    <a href="/gcpWtp-excel" >Export to Excel</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/path/to/index.js"></script>
+
+</body>
+
+</html>

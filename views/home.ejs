@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <div id="sidebar">
+        <%-include('menu.ejs')%>
+        
+          </div>
+          <div id="Content">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Industrial Solutions</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .jumbotron {
+            position: relative;
+            color: black;
+            background-color: rgb(217, 211, 211);
+            padding: 0;
+            margin-bottom: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Distribute content along the main axis */
+            overflow: hidden; /* Hide any overflow outside the jumbotron */
+        }
+        .circle-clip {
+            width: 300px; /* Adjust the size of the circular clip */
+            height: 300px;
+            background: url('/backdrop_page-0001.jpeg') center/cover no-repeat;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .circle-clip::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* background-color: rgba(0, 0, 0, 0.6); */
+            border-radius: 50%;
+        }
+        .content {
+            flex: 1;
+            padding: 40px; /* Add spacing around content */
+        }
+        .jumbotron h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        .jumbotron p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .hero-copy{
+            margin-left: 40%;
+            flex: 1;
+            padding: 40px;
+            color: rgb(0, 0, 0);
+            font: 48PX "Playfair Display", serif;
+            margin: 10px 0px 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="jumbotron">
+        <div class="hero-copy">
+            <h1 class="hero-title mt-0">Welcome to Manufacturing <br>eLog Book</h1>
+            <p class="lead">Your Trusted Partner for Cutting-Edge Industrial Solutions</p>
+            <!-- <div class="hero-cta"><a class="button button-shadow" href="#">Learn more</a><a class="button button-primary button-shadow" href="#">Early access</a></div> -->
+        </div>
+        <div class="circle-clip">
+            
+            <!-- Any additional content you want inside the circle -->
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="/path/to/index.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

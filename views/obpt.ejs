@@ -1,0 +1,607 @@
+  <div id="sidebar">
+<%-include('menu.ejs')%>
+
+  </div>
+  <div id="Content">
+<style>
+body {
+    font-family: Arial, sans-serif; 
+    font-weight: bold;
+    display: inline-table;
+    margin: 0;
+    padding: 0px;
+    background-color:rgb(206, 200, 200);
+}
+
+#header-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(206, 200, 200);
+    width: 100%;
+    height:150px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#existing-data-table-header{
+
+    background-color: rgb(206, 200, 200);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    padding: 10px;
+
+}
+
+header h1 {
+    font-size: 50px;
+    font-weight: 600;
+    background-image: linear-gradient(to left, black,gray);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    margin: 0;
+    padding: 0px;
+}
+header h2 {
+    font-size: 50px;
+    font-weight: 600;
+    background-image: linear-gradient(to left, black,gray);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    margin: 0;
+    padding: 0px;
+}
+
+
+
+h1,
+h2 {
+    text-align: center;
+}
+
+table {
+    margin: auto;
+    text-align: center;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    padding: 8px;
+    border: 1px solid #777;
+    width: 100px;
+}
+
+th {
+    background-color: #6c6363fe;
+    color: #fff;
+}
+
+.date {
+    height: 60px;
+    vertical-align: middle;
+}
+
+.OBPT_cell {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.existing-data-table {
+    width: 100%;
+    margin: 20px auto;
+}
+
+.existing_date,.existing_time{
+    background-color:  #6c6363fe;
+    color: white;
+}
+
+.edit-symbol,
+.save-button {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-symbol {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.save-button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.edit-symbol:hover,
+.save-button:hover {
+    background-color: #0056b3;
+}
+
+.editing-row td[contentEditable='true'] {
+    background-color: #77eff7;
+}
+
+input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+input[type="text"] {
+    align-items: center;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}</style>
+   <script>
+    
+        <%if (duplicateMessage && duplicateMessage !== null) {%> 
+            alert("<%= duplicateMessage%>");
+        <%}%> 
+   
+    function editData(id) {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    row.classList.add('editing-row');
+
+    
+    const cells = row.querySelectorAll('td:not(.edit-symbol):not(.save-button)');
+    cells.forEach((cell) => {
+      cell.contentEditable = true;
+    });
+
+    
+    row.querySelector('.edit-symbol').style.display = 'none';
+    row.querySelector('.save-button').style.display = '';
+  }
+
+
+  function saveData(id) {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    row.classList.remove('editing-row');
+
+    const cells = row.querySelectorAll('td:not(.edit-symbol):not(.save-button)');
+    cells.forEach((cell) => {
+      cell.contentEditable = false;
+    });
+
+    row.querySelector('.edit-symbol').style.display = '';
+    row.querySelector('.save-button').style.display = 'none';
+
+    
+    const date = row.cells[0].innerText;
+    const time = row.cells[1].innerText;
+    const thl = row.cells[2].innerText;
+    const eta = row.cells[3].innerText;
+    const probe1_tc1 = row.cells[4].innerText;
+    const probe1_tc2 = row.cells[5].innerText;
+    const probe1_tc3 = row.cells[6].innerText;
+    const probe1_tc4 = row.cells[7].innerText;
+    const probe1_tc5 = row.cells[8].innerText;
+    const probe2_tc6 = row.cells[9].innerText;
+    const probe2_tc7 = row.cells[10].innerText;
+    const probe2_tc8 = row.cells[11].innerText;
+    const probe2_tc9 = row.cells[12].innerText;
+    const probe2_tc10 = row.cells[13].innerText;
+    const bosh_1 = row.cells[14].innerText;
+    const bosh_2 = row.cells[15].innerText;
+    const bosh_3 = row.cells[16].innerText;
+    const belly_1 = row.cells[17].innerText;
+    const belly_2 = row.cells[18].innerText;
+    const belly_3 = row.cells[19].innerText;
+    const lower_1 = row.cells[20].innerText;
+    const lower_2 = row.cells[21].innerText;
+    const lower_3 = row.cells[22].innerText;
+    const mid_1 = row.cells[23].innerText;
+    const mid_2 = row.cells[24].innerText;
+    const mid_3 = row.cells[25].innerText;
+
+    fetch('/update-obpt', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id,
+        date,
+        time,
+        thl,
+        eta,
+        probe1_tc1,
+        probe1_tc2,
+        probe1_tc3,
+        probe1_tc4,
+        probe1_tc5,
+        probe2_tc6,
+        probe2_tc7,
+        probe2_tc8,
+        probe2_tc9,
+        probe2_tc10,
+        bosh_1,
+        bosh_2,
+        bosh_3,
+        belly_1,
+        belly_2,
+        belly_3,
+        lower_1,
+        lower_2,
+        lower_3,
+        mid_1,
+        mid_2,
+        mid_3,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data updated:', data);
+      })
+
+      
+      .catch((error) => {
+        console.error('Error updating data:', error);
+      });
+  }
+
+
+//function for add zero before dot .
+function addLeadingZero(input) {
+  const value = input.value;
+  
+  // Check if the value starts with a dot
+  if (value.startsWith('.')) {
+    input.value = '0' + value; // Add a leading zero
+  }
+}
+
+
+        
+    </script>
+    <div id="header-container">
+        <header>
+            <h1>OBP TEMPERATURE & SHAFT PRESSURE</h1>
+        </header>
+    </div>
+
+
+    <form action="/add-obpt" method="post">
+        <table>
+            <tr>
+                <th rowspan="3">Date</th>
+                <th rowspan="3">TIME</th>
+                <th rowspan="3">THL</th>
+                <th rowspan="3">ETA CO</th>
+                <th colspan="10"> OBPT</th>
+                <th colspan="12">SP</th>
+            </tr>
+            <tr>
+                <td name="PROBE-1" colspan="5">PROBE-1</td>
+                <td name="PROBE-2" colspan="5">PROBE-2</td>
+                <td name="BOSH" colspan="3">BOSH</td>
+                <td name="BELLY" colspan="3">BELLY</td>
+                <td name="LOWER" colspan="3">LOWER STACK</td>
+                <td name="MID" colspan="3">MID STACK</td>
+            </tr>
+            <tr>
+                <td name="probe1_tc1">TC-1</td>
+                <td name="probe1_tc2">TC-2</td>
+                <td name="probe1_tc3">TC-3</td>
+                <td name="probe1_tc4">TC-4</td>
+                <td name="probe1_tc5">TC-5</td>
+                <td name="probe2_tc1">TC-6</td>
+                <td name="probe2_tc2">TC-7</td>
+                <td name="probe2_tc3">TC-8</td>
+                <td name="probe2_tc4">TC-9</td>
+                <td name="probe2_tc5">TC-10</td>
+                <td name="BO-1">1</td>
+                <td name="BO-2">2</td>
+                <td name="BO-3">3</td>
+                <td name="BE-1">1</td>
+                <td name="BE-2">2</td>
+                <td name="BE-3">3</td>
+                <td name="LS-1">1</td>
+                <td name="LS-2">2</td>
+                <td name="LS-3">3</td>
+                <td name="MS-1">1</td>
+                <td name="MS-2">2</td>
+                <td name="MS-3">3</td>
+            </tr>
+
+            <tr>
+                <td><input type="date" name="date" required></td>
+                <td name="time"> <select name="time" required>
+                        <option value="null">Select Time</option>
+                        <option value="07:00">07:00</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                        <option value="21:00">21:00</option>
+                        <option value="22:00">22:00</option>
+                        <option value="23:00">23:00</option>
+                        <option value="00:00">00:00</option>
+                        <option value="01:00">01:00</option>
+                        <option value="02:00">02:00</option>
+                        <option value="03:00">03:00</option>
+                        <option value="04:00">04:00</option>
+                        <option value="05:00">05:00</option>
+                        <option value="06:00">06:00</option>
+                    </select></td>
+                 <td><input required type="text" name="thl" oninput="addLeadingZero(this)" id="thl"></td>
+                 <td><input required type="text" name="eta" oninput="addLeadingZero(this)" id="eta"></td>
+                 <td><input required type="text" name="probe1_tc1" oninput="addLeadingZero(this)" id="probe1_tc1"></td>
+                 <td><input required type="text" name="probe1_tc2" oninput="addLeadingZero(this)" id="probe1_tc2"></td>
+                 <td><input required type="text" name="probe1_tc3" oninput="addLeadingZero(this)" id="probe1_tc3"></td>
+                 <td><input required type="text" name="probe1_tc4" oninput="addLeadingZero(this)" id="probe1_tc4"></td>
+                 <td><input required type="text" name="probe1_tc5" oninput="addLeadingZero(this)" id="probe1_tc5"></td>
+                 <td><input required type="text" name="probe2_tc6" oninput="addLeadingZero(this)" id="probe2_tc6"></td>
+                 <td><input required type="text" name="probe2_tc7" oninput="addLeadingZero(this)" id="probe2_tc7"></td>
+                 <td><input required type="text" name="probe2_tc8" oninput="addLeadingZero(this)" id="probe2_tc8"></td>
+                 <td><input required type="text" name="probe2_tc9" oninput="addLeadingZero(this)" id="probe2_tc9"></td>
+                 <td><input required type="text" name="probe2_tc10" oninput="addLeadingZero(this)" id="probe2_tc10"></td>
+                 <td><input required type="text" name="bosh_1" oninput="addLeadingZero(this)" id="bosh_1"></td>
+                 <td><input required type="text" name="bosh_2" oninput="addLeadingZero(this)" id="bosh_2"></td>
+                 <td><input required type="text" name="bosh_3" oninput="addLeadingZero(this)" id="bosh_3"></td>
+                 <td><input required type="text" name="belly_1" oninput="addLeadingZero(this)" id="belly_1"></td>
+                 <td><input required type="text" name="belly_2" oninput="addLeadingZero(this)" id="belly_2"></td>
+                 <td><input required type="text" name="belly_3" oninput="addLeadingZero(this)" id="belly_3"></td>
+                 <td><input required type="text" name="lower_1" oninput="addLeadingZero(this)" id="lower_1"></td>
+                 <td><input required type="text" name="lower_2" oninput="addLeadingZero(this)" id="lower_2"></td>
+                 <td><input required type="text" name="lower_3" oninput="addLeadingZero(this)" id="lower_3"></td>
+                 <td><input required type="text" name="mid_1" oninput="addLeadingZero(this)" id="mid_1"></td>
+                 <td><input required type="text" name="mid_2" oninput="addLeadingZero(this)" id="mid_2"></td>
+                 <td><input required type="text" name="mid_3" oninput="addLeadingZero(this)" id="mid_3"></td>
+            </tr>
+        </table>
+        <input type="submit"  value="Submit Data">
+    </form>
+
+    
+    
+    <div id="existing-data-table-header">
+        <header>
+            
+            <h2>EXISTING OBPT DATA</h2>
+            
+        </header>
+    </div>
+    <form action="/obpt" method="get">
+        <label for="date">Select Date: </label>
+        <input type="date" id="date" name="date">
+        <button type="submit">Filter Data</button>
+      </form>
+    <form  action="/edit-obpt"  method="post">
+    <table class="existing-data-table" id="existing-data-table">
+        <tr>
+            <th rowspan="3">Date</th>
+            <th rowspan="3">TIME</th>
+            <th rowspan="3">THL</th>
+            <th rowspan="3">ETA CO</th>
+            <th colspan="10"> OBPT</th>
+            <th colspan="12">SP</th>
+            <th rowspan="3"><i class='fas fa-edit' style='font-size:36px;color: red'></i>E/S</th>
+        </tr>
+        <tr>
+            <td name="PROBE-1" colspan="5">PROBE-1</td>
+            <td name="PROBE-2" colspan="5">PROBE-2</td>
+            <td name="BOSH" colspan="3">BOSH</td>
+            <td name="BELLY" colspan="3">BELLY</td>
+            <td name="LOWER" colspan="3">LOWER STACK</td>
+            <td name="MID" colspan="3">MID STACK</td>
+        </tr>
+        <tr>
+            <td name="probe1_tc1">TC-1</td>
+            <td name="probe1_tc2">TC-2</td>
+            <td name="probe1_tc3">TC-3</td>
+            <td name="probe1_tc4">TC-4</td>
+            <td name="probe1_tc5">TC-5</td>
+            <td name="probe2_tc1">TC-6</td>
+            <td name="probe2_tc2">TC-7</td>
+            <td name="probe2_tc3">TC-8</td>
+            <td name="probe2_tc4">TC-9</td>
+            <td name="probe2_tc5">TC-10</td>
+            <td name="BO-1">1</td>
+            <td name="BO-2">2</td>
+            <td name="BO-3">3</td>
+            <td name="BE-1">1</td>
+            <td name="BE-2">2</td>
+            <td name="BE-3">3</td>
+            <td name="LS-1">1</td>
+            <td name="LS-2">2</td>
+            <td name="LS-3">3</td>
+            <td name="MS-1">1</td>
+            <td name="MS-2">2</td>
+            <td name="MS-3">3</td>
+        </tr>
+        <%tableName.slice(-24).forEach(date=> { %>
+            <tr data-id="<%= date.id %>">
+                <td class="existing_date" >
+
+                    <%= date.date %>
+
+                </td>
+                <td class="existing_time">
+
+                    <%= date.time %>
+
+                </td>
+                <td>
+
+                    <%= date.thl %>
+
+                </td>
+                <td>
+
+                    <%= date.eta %>
+
+                </td>
+                <td>
+
+                    <%= date.probe1_tc1 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe1_tc2 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe1_tc3 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe1_tc4 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe1_tc5 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe2_tc6 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe2_tc7 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe2_tc8 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe2_tc9 %>
+
+                </td>
+                <td>
+
+                    <%= date.probe2_tc10 %>
+
+                </td>
+                <td>
+
+                    <%= date.bosh_1 %>
+
+                </td>
+                <td>
+
+                    <%= date.bosh_2 %>
+
+                </td>
+                <td>
+
+                    <%= date.bosh_3 %>
+
+                </td>
+                <td>
+
+                    <%= date.belly_1 %>
+
+                </td>
+                <td>
+
+                    <%= date.belly_2 %>
+
+                </td>
+                <td>
+
+                    <%= date.belly_3 %>
+
+                </td>
+                <td>
+
+                    <%= date.lower_1 %>
+
+                </td>
+                <td>
+
+                    <%= date.lower_2 %>
+
+                </td>
+                <td>
+
+                    <%= date.lower_3 %>
+
+                </td>
+                <td>
+
+                    <%= date.mid_1 %>
+
+                </td>
+                <td>
+
+                    <%= date.mid_2 %>
+
+                </td>
+                <td>
+
+                    <%= date.mid_3 %>
+
+                </td>
+                <td class="edit-symbol" onclick="editData('<%= date.id %>')">
+                    &#9998;
+                </td>
+                <td class="save-button" onclick="saveData('<%= date.id %>')" style="display: none;">
+                    &#10004;
+                </td>
+                
+                
+                
+                
+            </tr>
+            <% }); %>
+    </table>
+    <a href="/obpt-excel" class="btn btn-primary">Export to Excel</a>
+
+    </form>
+   
+
+</div>
